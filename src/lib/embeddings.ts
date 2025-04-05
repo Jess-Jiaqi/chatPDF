@@ -10,10 +10,10 @@ export async function getEmbeddings(text: string) {
   try {
     // For development purposes, you can use fake vectors
     if (process.env.NODE_ENV === "development") {
-      console.log("DEV mode - using fake vectors）");
+      console.log("DEV mode - using fake vectors");
       return Array.from({ length: 1536 }, () => Math.random() * 2 - 1);
     }
-    
+
     const response = await openai.createEmbedding({
       model: "text-embedding-ada-002",
       input: text.replace(/\n/g, " "),
