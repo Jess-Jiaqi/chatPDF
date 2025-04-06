@@ -46,7 +46,7 @@ export async function loadS3IntoPinecone(fileKey: string) {
 
   // 4. upload vectors to pinecone
   const client = await getPineconeClient();
-  const pineconeIndex = client.Index("chatpdf");
+  const pineconeIndex = client.Index("chatpdf-flyingcat");
   const namespace = convertToAscii(fileKey);
 
   console.log("uploading vectors to pinecone");

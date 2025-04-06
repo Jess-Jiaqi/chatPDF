@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.12",
+    "@huggingface/inference": "^2.8.1",
     "@langchain/community": "^0.3.39",
     "@langchain/core": "^0.3.43",
     "@neondatabase/serverless": "^1.0.0",
