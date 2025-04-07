@@ -1,3 +1,4 @@
+import ChatComponent from "@/components/ChatComponent";
 import ChatSideBar from "@/components/ChatSideBar";
 import PDFViewer from "@/components/PDFViewer";
 import { db } from "@/lib/db";
@@ -13,7 +14,8 @@ type Props = {
   };
 };
 
-const ChatPage = async ({ params: { chatId } }: Props) => {
+const ChatPage = async ({ params }: Props) => {
+  const  chatId  = params.chatId;
   const { userId } = await auth();
   if (!userId) {
     return redirect("/sign-in");
@@ -38,7 +40,7 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
           <PDFViewer pdf_url={currentChat?.pdfUrl || ""} />
         </div>
         <div className="flex-[3] border-l-4 border-l-slate-200">
-          {/* chat component */}
+          <ChatComponent />
         </div>
       </div>
     </div>
