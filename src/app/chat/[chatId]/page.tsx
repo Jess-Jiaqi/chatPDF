@@ -1,3 +1,4 @@
+import ChatComponent from "@/components/ChatComponent";
 import ChatSideBar from "@/components/ChatSideBar";
 import PDFViewer from "@/components/PDFViewer";
 import { db } from "@/lib/db";
@@ -39,7 +40,7 @@ const ChatPage = async ({ params }: Props) => {
           <PDFViewer pdf_url={currentChat?.pdfUrl || ""} />
         </div>
         <div className="flex-[3] border-l-4 border-l-slate-200">
-          {/* chat component */}
+          <ChatComponent />
         </div>
       </div>
     </div>
