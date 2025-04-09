@@ -1,27 +1,40 @@
 "use client";
 import React from "react";
 import { Input } from "./ui/input";
-import { useChat } from "@ai-sdk/react";
+import { Message, useChat } from "@ai-sdk/react";
 import { Button } from "./ui/button";
 import { Send } from "lucide-react";
 import MessageList from "./MessageList";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 type Props = { chatId: number };
 
 const ChatComponent = ({ chatId }: Props) => {
-  const { input, handleInputChange, handleSubmit, messages } = useChat({
+  const { data, isLoading } = useQuery({
+    queryKey: ['chat', chatId],
+    queryFn: async () => {
+      const response = await axios.post<Message[]>('/api/get-messages', { chatId });
+      return response.data;
+    }
+  })
+
+  const chatOptions = React.useMemo(() => ({
     api: "/api/chat",
     body: {
       chatId,
     },
-  });
+    initialMessages: data || [],
+  }), [data, chatId]);
+
+  const { input, handleInputChange, handleSubmit, messages } = useChat(chatOptions);
 
   React.useEffect(() => {
     const messageContainer = document.getElementById("message-container");
     if (messageContainer) {
       messageContainer.scrollTo({
         top: messageContainer.scrollHeight,
-        behavior: "smooth", // Optional: smooth scrolling
+        behavior: "smooth",
       })
     }
   }, [messages])
@@ -32,7 +45,7 @@ const ChatComponent = ({ chatId }: Props) => {
         <h3 className="text-xl font-bold">Chat</h3>
       </div>
 
-      <MessageList messages={messages} />
+      <MessageList messages={messages} isLoading={isLoading} />
 
       <form
         onSubmit={handleSubmit}

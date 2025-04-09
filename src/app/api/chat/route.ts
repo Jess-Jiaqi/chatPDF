@@ -1,7 +1,7 @@
 import { Message, streamText } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { db } from "@/lib/db";
-import { chats } from "@/lib/db/schema";
+import { chats, messages as _messages } from "@/lib/db/schema";
 import { getContext } from "@/lib/context";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
@@ -15,6 +15,13 @@ export async function POST(request: Request) {
     }
     const fileKey = _chats[0].fileKey;
     const lastMessage = messages[messages.length - 1];
+    
+    await db.insert(_messages).values({
+      chatId,
+      content: lastMessage.content,
+      role: 'user',
+    });
+    
     const context = await getContext(lastMessage.content, fileKey);
 
     const prompt = {
@@ -34,13 +41,28 @@ export async function POST(request: Request) {
       AI assistant will not invent anything that is not drawn directly from the context.`,
     };
 
+    let savedResponse = false; 
+    
     const stream = await streamText({
       model: openai("gpt-3.5-turbo"),
       messages: [
         prompt,
         ...messages.filter((message: Message) => message.role === "user"),
       ],
+      onChunk: async () => {
+      },
+      onFinish: async (completion) => {
+        if (!savedResponse) { 
+          savedResponse = true;
+          await db.insert(_messages).values({
+            chatId,
+            content: completion.text,
+            role: 'system',
+          });
+        }
+      },
     });
+
     return stream.toDataStreamResponse();
   } catch (error) {
     console.error("cannot complete chat", error);
