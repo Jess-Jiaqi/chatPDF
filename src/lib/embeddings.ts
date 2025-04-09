@@ -1,21 +1,19 @@
-import { HfInference } from '@huggingface/inference';
+import { OpenAIApi, Configuration } from "openai-edge";
 
-const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
+const config = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+const openai = new OpenAIApi(config);
 
 export async function getEmbeddings(text: string) {
   try {
-    const modelName = "sentence-transformers/all-MiniLM-L6-v2";
-    const response = await hf.featureExtraction({
-      model: modelName,
-      inputs: text.replace(/\n/g, " "),
+    const response = await openai.createEmbedding({
+      model: "text-embedding-ada-002",
+      input: text.replace(/\n/g, " "),
     });
-    
-    if (!response || !Array.isArray(response)) {
-      console.log("Unexpected API response structure:", response);
-      throw new Error("API response structure is unexpected");
-    }
-    
-    return response as number[];
+    const result = await response.json();
+    return result.data[0].embedding as number[];
   } catch (error) {
     console.log("error calling openai embedding api", error);
     throw error;
