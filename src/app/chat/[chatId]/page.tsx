@@ -12,9 +12,9 @@ import React from "react";
 export default async function ChatPage({
   params,
 }: {
-  params: { chatId: string }
+  params: Promise<{ chatId: string }>
 }) {
-  const { chatId } = params;
+  const { chatId } = await params;
   const { userId } = await auth();
   if (!userId) {
     return redirect("/sign-in");
