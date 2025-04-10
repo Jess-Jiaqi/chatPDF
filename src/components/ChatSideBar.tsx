@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { MessageCircle, PlusCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import axios from "axios";
 import SubscriptionButton from "./SubscriptionButton";
 
 type Props = {
@@ -15,7 +14,6 @@ type Props = {
 };
 
 const ChatSideBar = ({ chats, chatId, isPro }: Props) => {
-  const [loading, setLoading] = React.useState(false);
 
   return (
     <div className="w-full h-screen p-4 text-gray-200 bg-gray-900">

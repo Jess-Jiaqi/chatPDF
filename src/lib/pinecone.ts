@@ -66,7 +66,7 @@ export async function loadS3IntoPinecone(fileKey: string) {
   for (const chunk of chunks(validVectors)) {
     await pineconeIndex.namespace(namespace).upsert(chunk);
   }
-  
+
   return documents[0];
 }
 
@@ -101,12 +101,12 @@ export const truncateStringByBytes = (str: string, maxBytes: number) => {
 };
 
 async function prepareDocument(page: PDFPage) {
-  let { pageContent, metadata } = page;
-  pageContent = pageContent.replace(/\n/g, " ");
+  const { pageContent, metadata } = page;
+  const cleanedContent = pageContent.replace(/\n/g, " ");
   const splitter = new RecursiveCharacterTextSplitter();
   const docs = await splitter.splitDocuments([
     new Document({
-      pageContent,
+      pageContent: cleanedContent,
       metadata: {
         pageNumber: metadata.loc.pageNumber,
         text: truncateStringByBytes(pageContent, 36000),
