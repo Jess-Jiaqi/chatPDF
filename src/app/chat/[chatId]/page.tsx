@@ -13,10 +13,11 @@ type Props = {
   params: {
     chatId: string;
   };
+  searchParams: { [key: string]: string | string[] | undefined };
 };
 
 const ChatPage = async ({ params }: Props) => {
-  const  chatId  = params.chatId;
+  const chatId = params.chatId;
   const { userId } = await auth();
   if (!userId) {
     return redirect("/sign-in");
