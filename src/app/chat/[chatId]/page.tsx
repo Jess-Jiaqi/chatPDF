@@ -9,13 +9,8 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import React from "react";
 
-type PageProps = {
-  params: {
-    chatId: string;
-  };
-};
-
-const ChatPage = async ({ params:{ chatId } }: PageProps) => {
+const ChatPage = async ({ params }: { params: { chatId: string } }) => {
+  const { chatId } = params;
   const { userId } = await auth();
   if (!userId) {
     return redirect("/sign-in");
@@ -35,7 +30,7 @@ const ChatPage = async ({ params:{ chatId } }: PageProps) => {
     <div className="flex max-h-screen overflow-scroll">
       <div className="flex w-full max-h-screen overflow-scroll">
         <div className="flex-[1] max-w-xs">
-          <ChatSideBar chats={_chats} chatId={parseInt(chatId)} isPro={isPro}/>
+          <ChatSideBar chats={_chats} chatId={parseInt(chatId)} isPro={isPro} />
         </div>
         <div className="max-h-screen p-4 overflow-scroll flex-[5]">
           <PDFViewer pdf_url={currentChat?.pdfUrl || ""} />
