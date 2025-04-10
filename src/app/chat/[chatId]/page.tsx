@@ -9,15 +9,13 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import React from "react";
 
-type Props = {
+type PageProps = {
   params: {
     chatId: string;
   };
-  searchParams: { [key: string]: string | string[] | undefined };
 };
 
-const ChatPage = async ({ params }: Props) => {
-  const chatId = params.chatId;
+const ChatPage = async ({ params:{ chatId } }: PageProps) => {
   const { userId } = await auth();
   if (!userId) {
     return redirect("/sign-in");
