@@ -18,6 +18,7 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SIGNING_SECRET as string
     );
   } catch (error) {
+    console.log("Webhook signature signing fail", error);
     return new NextResponse("Webhook error", { status: 400 });
   }
 
