@@ -9,11 +9,12 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import React from "react";
 
-export default async function ChatPage({
-  params,
-}: {
-  params: { chatId: string }
-}) {
+export default async function ChatPage(
+  props: {
+    params: Promise<{ chatId: string }>
+  }
+) {
+  const params = await props.params;
   const  chatId  = params.chatId;
   const { userId } = await auth();
   if (!userId) {
