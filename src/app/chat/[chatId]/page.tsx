@@ -9,14 +9,18 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import React from "react";
 
-const ChatPage = async ({ params }: { params: { chatId: string } }) => {
+export default async function ChatPage({
+  params,
+}: {
+  params: { chatId: string }
+}) {
   const { chatId } = params;
   const { userId } = await auth();
   if (!userId) {
     return redirect("/sign-in");
   }
   const _chats = await db.select().from(chats).where(eq(chats.userId, userId));
-  if (!_chats) {
+  if (!_chats || _chats.length === 0) {
     return redirect("/");
   }
   if (!_chats.find((chat) => chat.id === parseInt(chatId))) {
@@ -42,5 +46,3 @@ const ChatPage = async ({ params }: { params: { chatId: string } }) => {
     </div>
   );
 };
-
-export default ChatPage;
